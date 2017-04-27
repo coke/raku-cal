@@ -20,11 +20,19 @@ INIT {
     $*DAY   = $now.day;
 }
 
+sub validate-year($year) {
+    if $year > 9999 or $year < 0 {
+        note "Must specify a year betwen 13 and 9999";
+        exit 1;
+    }
+}
+
 multi sub MAIN {
     say render-month($*YEAR, $*MONTH);
 }
 
 multi sub MAIN($month, $year) {
+    validate-year($year);
     if $month ~~ Int {
         say render-month($year, $month);
     } else {
@@ -41,6 +49,7 @@ multi sub MAIN($month) {
 }
 
 multi sub MAIN(Int $year where * > 12) {
+    validate-year($year);
     say render-year($year);
 }
 
