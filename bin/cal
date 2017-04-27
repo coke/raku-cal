@@ -1,0 +1,108 @@
+#! /usr/bin/env perl6
+
+use Terminal::ANSIColor;
+
+enum Months «
+    :January(1) February March
+    April       May      June
+    July        August   September
+    October     November December
+»;
+
+my $*YEAR;
+my $*MONTH;
+my $*DAY;
+
+INIT {
+    my $now = now.Date;
+    $*YEAR  = $now.year;
+    $*MONTH = $now.month;
+    $*DAY   = $now.day;
+}
+
+multi sub MAIN {
+    say render-month($*YEAR, $*MONTH);
+}
+
+multi sub MAIN($month, $year) {
+    if $month ~~ Int {
+        say render-month($year, $month);
+    } else {
+        say render-month($year, ::Months::($month.tc));
+    }
+}
+
+multi sub MAIN($month) {
+    if $month ~~ Int {
+        say render-month($*YEAR, $month);
+    } else {
+        say render-month($*YEAR, ::Months::($month.tc));
+    }
+}
+
+multi sub MAIN(Int $year where * > 12) {
+    say render-year($year);
+}
+
+sub render-month($year, $month, :$show-year=True) {
+    my @output;
+    my $first = Date.new($year, $month, 1);
+    my $days-in-month = $first.days-in-month;
+    my $dow=$first.day-of-week; 
+
+    my $title = Months($month);
+    $title ~= " " ~ $year if $show-year; 
+    my $padding = (20 - $title.chars)/2.floor;
+
+    push @output, " " x $padding, BOLD, $title, RESET, "\n";
+    push @output, "Su Mo Tu We Th Fr Sa\n";
+    push @output, "   " x $dow unless $dow > 6;
+
+    my $pday = 1;
+    while $pday <= $days-in-month {
+        if $pday == $*DAY && $year == $*YEAR && $month == $*MONTH {
+            push @output, BOLD, $pday.fmt("%2i"), RESET;
+        } else {
+            push @output, $pday.fmt("%2i");
+        }
+
+        if $pday != $days-in-month {
+            if $dow == 6  {
+                push @output, "\n";
+            } else {
+                push @output, " ";
+            }
+        }
+        $pday++;
+        $dow++; $dow %= 7;
+    }
+    return @output.join;
+}
+
+sub render-year($year) {
+    my @output;
+    my $padding = (64 - $year.chars)/2.floor;
+    push @output, " " x $padding ~ BOLD() ~ $year ~ RESET();
+    push @output, "";
+    my @months;
+    for 1..12 -> $month {
+        push @months, render-month($year, $month, :!show-year);
+    }
+    for @months -> $one, $two, $three {
+        my @one = $one.lines;
+        my @two = $two.lines;
+        my @three = $three.lines;
+        for ^8 -> $row {
+            my $a = pad-right(@one[$row] // "", 20);
+            my $b = pad-right(@two[$row] // "", 20);
+            my $c = pad-right(@three[$row] // "", 20);
+            push @output, $a.chomp ~ "  " ~ $b.chomp ~ "  " ~ $c.chomp
+        }
+    }
+
+    @output.join("\n");
+}
+
+sub pad-right($str is copy, $pad) {
+    $str ~ " " x ($pad - (colorstrip $str).chars);
+}
