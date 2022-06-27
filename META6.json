@@ -1,0 +1,19 @@
+{
+  "authors" : [
+    "Will Coleda"
+  ],
+  "build-depends" : [ ],
+  "depends" : [ ],
+  "description" : "Drop in replacement for cal written in raku",
+  "license" : "Artistic-2.0",
+  "name" : "App::Cal",
+  "perl" : "6",
+  "provides" : {
+    "App::Uni" : "lib/App/Cal.rakumod"
+  },
+  "resources" : [ ],
+  "source-url" : "git://github.com/coke/raku-cal.git",
+  "tags" : [ ],
+  "test-depends" : [ ],
+  "version" : "0.9"
+}
