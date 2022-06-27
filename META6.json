@@ -3,7 +3,9 @@
     "Will Coleda"
   ],
   "build-depends" : [ ],
-  "depends" : [ ],
+  "depends" : [
+    "Terminal::ANSIColor"
+  ],
   "description" : "Drop in replacement for cal written in raku",
   "license" : "Artistic-2.0",
   "name" : "App::Cal",
