@@ -2,24 +2,26 @@
 
 use App::Cal;
 
-multi sub MAIN {
-    say render-month();
+my $common-args = :(Bool :$h);
+
+multi sub MAIN(|options where $common-args) {
+    say render-month(|options);
 }
 
-multi sub MAIN($month, $year) {
+multi sub MAIN($month, $year, |options where $common-args) {
     if $month ~~ Int {
-        say render-month(:$year, :$month);
+        say render-month(:$year, :$month, |options);
     } else {
-        say render-month(:$year, :month(::Months::($month.tc)));
+        say render-month(:$year, :month(::Months::($month.tc)), |options);
     }
 }
 
-multi sub MAIN($single) {
+multi sub MAIN($single, |options where $common-args) {
     if $single ~~ Int {
-        say render-month(:month($single)) if $single <=12;
-        say render-year( :year($single))  if $single >12;
+        say render-month(:month($single), |options) if $single <=12;
+        say render-year( :year($single), |options)  if $single >12;
     } else {
-        say render-month(:month(::App::Cal::Months::($single.tclc)));
+        say render-month(:month(::App::Cal::Months::($single.tclc)), |options);
     }
 }
 

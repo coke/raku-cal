@@ -27,7 +27,7 @@ sub validate-year($year) {
     }
 }
 
-sub render-month(:$year=$YEAR, :$month=$MONTH, :$show-year=True) is export {
+sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$show-year=True) is export {
     validate-year($year);
     my @output;
     my $first = Date.new($year, $month, 1);
@@ -38,14 +38,17 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$show-year=True) is export {
     $title ~= " " ~ $year if $show-year; 
     my $padding = (20 - $title.chars)/2.floor;
 
-    push @output, " " x $padding, BOLD, $title, RESET, "\n";
+    my $bold  = $h ?? '' !! BOLD;
+    my $reset = $h ?? '' !! RESET;
+
+    push @output, " " x $padding, $bold, $title, $reset, "\n";
     push @output, "Su Mo Tu We Th Fr Sa\n";
     push @output, "   " x $dow unless $dow > 6;
 
     my $pday = 1;
     while $pday <= $days-in-month {
         if $pday == $DAY && $year == $YEAR && $month == $MONTH {
-            push @output, BOLD, $pday.fmt("%2i"), RESET;
+            push @output, $bold, $pday.fmt("%2i"), $reset;
         } else {
             push @output, $pday.fmt("%2i");
         }
@@ -63,15 +66,17 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$show-year=True) is export {
     return @output.join;
 }
 
-sub render-year(:$year) is export {
+sub render-year(:$year, :$h) is export {
     validate-year($year);
     my @output;
+    my $bold  = $h ?? "" !! BOLD;
+    my $reset = $h ?? "" !! RESET;
     my $padding = (64 - $year.chars)/2.floor;
-    push @output, " " x $padding ~ BOLD() ~ $year ~ RESET();
+    push @output, " " x $padding ~ $bold ~ $year ~ $reset;
     push @output, "";
     my @months;
     for 1..12 -> $month {
-        push @months, render-month(:$year, :$month, :!show-year);
+        push @months, render-month(:$year, :$month, :$h, :!show-year);
     }
     for @months -> $one, $two, $three {
         my @one = $one.lines;
