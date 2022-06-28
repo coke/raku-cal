@@ -2,7 +2,7 @@
 
 use App::Cal;
 
-my $common-args = :(Bool :$h);
+my $common-args = :(Bool :$h, Bool :$w);
 
 multi sub MAIN(|options where $common-args) {
     say render-month(|options);
