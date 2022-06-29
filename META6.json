@@ -2,7 +2,9 @@
   "authors" : [
     "Will Coleda"
   ],
-  "build-depends" : [ ],
+  "bild-depends" : [
+     "Test::Differences"
+  ],
   "depends" : [
     "Terminal::ANSIColor"
   ],
