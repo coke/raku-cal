@@ -117,12 +117,13 @@ sub render-year(:$year, :$h) is export {
     my $reset = $h ?? "" !! RESET;
     my $padding = (64 - $year.chars)/2.floor;
     push @output, " " x $padding ~ $bold ~ $year ~ $reset;
-    push @output, "";
     my @months;
     for 1..12 -> $month {
         push @months, render-month(:$year, :$month, :$h, :!show-year);
     }
+    my $r = 0;
     for @months -> $one, $two, $three {
+        $r++;
         my @one = $one.lines;
         my @two = $two.lines;
         my @three = $three.lines;
@@ -132,6 +133,7 @@ sub render-year(:$year, :$h) is export {
             my $c = pad-right(@three[$row] // "", 20);
             push @output, $a.chomp ~ "  " ~ $b.chomp ~ "  " ~ $c.chomp
         }
+        push @output, "" if $r < 4;
     }
 
     @output.join("\n");
