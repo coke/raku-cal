@@ -10,7 +10,7 @@ use Test;
 use Test::Differences;
 
 # Output from system cal
-my $twenty-twenty-two = q:to/CAL/;
+my $y2022 = q:to/CAL/;
                             2022
       January               February               March          
 Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
@@ -49,10 +49,14 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
 30 31                                                             
 CAL
 
-# Strip trailing whitespace
-$twenty-twenty-two ~~ s:g/\s+$$//;
-
 my $proc=run(<raku -Ilib bin/cal -h 2022>, :out);
 my $output=$proc.out.slurp(:close);
 
-eq_or_diff $output, $twenty-twenty-two, "expected result for non-higlighted year"; 
+# Strip trailing whitespace
+$y2022 ~~ s:g/\s+$$//;
+
+# Ignore spacing 
+$y2022  ~~ s:g/\s+/ /;
+$output ~~ s:g/\s+/ /;
+
+eq_or_diff $output, $y2022, "expected result for non-higlighted year"; 
