@@ -27,7 +27,7 @@ sub validate-year($year) {
     }
 }
 
-sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$w, :$show-year=True) is export {
+sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$show-year=True) is export {
     validate-year($year);
     my @output;
     my $first = Date.new($year, $month, 1);
@@ -37,7 +37,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$w, :$show-year=True) is ex
 
     my $title = Months($month);
     $title ~= " " ~ $year if $show-year; 
-    my $width = $w ?? 18 !! 20;
+    my $width = $n ?? 18 !! 20;
     my $padding = ($width - $title.chars)/2.floor;
 
     my $bold  = $h ?? '' !! BOLD;
@@ -45,7 +45,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$w, :$show-year=True) is ex
 
     push @output, " " x $padding, $bold, $title, $reset, "\n";
 
-    if !$w { 
+    if !$n { 
         # horizontal, default
         push @output, "Su Mo Tu We Th Fr Sa\n";
         push @output, "   " x $dow unless $dow > 6;
@@ -69,7 +69,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$w, :$show-year=True) is ex
             $dow++; $dow %= 7;
         }
     } else {
-        # $w: week
+        # $n: ncal
         my %days = <1 Mo 2 Tu 3 We 4 Th 5 Fr 6 Sa 7 Su>;
         my $begin = True;
         my $today = Date.new($YEAR, $MONTH, $DAY);
