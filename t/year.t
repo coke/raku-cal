@@ -9,6 +9,8 @@ Test that our output for a given month matches system cal
 use Test;
 use Test::Differences;
 
+plan 1;
+
 # Output from system cal
 my $y2022 = q:to/CAL/;
                             2022
