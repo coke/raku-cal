@@ -101,11 +101,9 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$show-year=True) is ex
                        }
                    }
                }
-               push @output, "\n";
            }
            push @output, "\n";
         }
-        #dd flat $first..$last;
     }
     return @output.grep(?*).join;
 }
