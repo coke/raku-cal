@@ -28,8 +28,12 @@ Displays the calendar for February of 1997.
 
     -h
 
-Disable highlighting
+Disable highlighting.
 
     -n
 
-Display weeks vertically instead of horizontally (like ncal)
+Display weeks vertically instead of horizontally (like ncal).
+
+    -w
+
+Include week numbers (Only works with `-n`).

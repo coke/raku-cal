@@ -27,7 +27,7 @@ sub validate-year($year) {
     }
 }
 
-sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$show-year=True) is export {
+sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$w, :$show-year=True) is export {
     validate-year($year);
     my @output;
     my $first = Date.new($year, $month, 1);
@@ -91,13 +91,15 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$show-year=True) is ex
                }
            }
            LAST {
-               # output week numbers
-               push @output, '   ';
-               for @range -> $end-of-week {
-                   push @output, $end-of-week.week-number.fmt("%3i");
-                   LAST {
-                       if $last > $end-of-week {
-                           push @output, $last.week-number.fmt("%3i");
+               if $w {
+                   # output week numbers
+                   push @output, '   ';
+                   for @range -> $end-of-week {
+                       push @output, $end-of-week.week-number.fmt("%3i");
+                       LAST {
+                           if $last > $end-of-week {
+                               push @output, $last.week-number.fmt("%3i");
+                           }
                        }
                    }
                }
@@ -105,6 +107,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$show-year=True) is ex
            push @output, "\n";
         }
     }
+    @output[*-1]:delete if @output[*-1] eq "\n";
     return @output.grep(?*).join;
 }
 
