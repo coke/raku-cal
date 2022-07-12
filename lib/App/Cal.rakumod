@@ -37,7 +37,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$w, :$show-year=True) 
 
     my $title = Months($month);
     $title ~= " " ~ $year if $show-year; 
-    my $width = $n ?? 18 !! 20;
+    my $width = $n ?? 21 !! 20;
     my $padding = ($width - $title.chars)/2.floor;
 
     my $bold  = $h ?? '' !! BOLD;
@@ -111,7 +111,7 @@ sub render-month(:$year=$YEAR, :$month=$MONTH, :$h, :$n, :$w, :$show-year=True) 
     return @output.grep(?*).join;
 }
 
-sub render-year(:$year, :$h) is export {
+sub render-year(:$year, :$h, :$n, :$w) is export {
     validate-year($year);
     my @output;
     my $bold  = $h ?? "" !! BOLD;
@@ -120,21 +120,28 @@ sub render-year(:$year, :$h) is export {
     push @output, " " x $padding ~ $bold ~ $year ~ $reset;
     my @months;
     for 1..12 -> $month {
-        push @months, render-month(:$year, :$month, :$h, :!show-year);
+        push @months, render-month(:$year, :$month, :$h, :$n, :$w, :!show-year);
     }
-    my $r = 0;
-    for @months -> $one, $two, $three {
-        $r++;
-        my @one = $one.lines;
-        my @two = $two.lines;
-        my @three = $three.lines;
-        for ^8 -> $row {
-            my $a = pad-right(@one[$row] // "", 20);
-            my $b = pad-right(@two[$row] // "", 20);
-            my $c = pad-right(@three[$row] // "", 20);
-            push @output, $a.chomp ~ "  " ~ $b.chomp ~ "  " ~ $c.chomp
+    my $per-row = $n ?? 4 !! 3; 
+    my $month-padding = $n ?? 21 !! 20;
+    for @months.rotor($per-row).kv -> $row, $group {
+        my $line = "";
+        my @lines;
+        my $max-lines = 0;
+        for @($group) -> $month {
+            my @month-lines = $month.lines;
+            $max-lines = @month-lines.elems if @month-lines.elems > $max-lines;
+            @lines.push: @month-lines;
         }
-        push @output, "" if $r < 4;
+        for 0..^$max-lines -> $l {
+            my @chunks;
+            for @lines -> $month {
+                push @chunks, pad-right($month[$l] // "", $month-padding).chomp;
+            }
+            push @output, @chunks.join('  ');
+
+        }
+        push @output, "" unless $row == 12/$per-row - 1;
     }
 
     @output.join("\n");
