@@ -21,8 +21,8 @@ INIT {
 }
 
 sub validate-year($year) {
-    if $year > 9999 or $year < 0 {
-        note "Must specify a year betwen 13 and 9999";
+    if $year > 9999 or $year < 13 {
+        note "Must specify a year between 13 and 9999";
         exit 1;
     }
 }
