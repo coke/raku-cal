@@ -1,24 +1,27 @@
 {
-  "authors" : [
+  "auth": "zef:coke",
+  "authors": [
     "Will Coleda"
   ],
-  "auth": "zef:coke",
-  "build-depends" : [
-     "Test::Differences"
+  "build-depends": [
+    "Test::Differences"
   ],
-  "depends" : [
+  "depends": [
     "Terminal::ANSIColor"
   ],
-  "description" : "Replacement for cal/ncal written in raku",
-  "license" : "Artistic-2.0",
-  "name" : "App::Cal",
-  "perl" : "6",
-  "provides" : {
-    "App::Cal" : "lib/App/Cal.rakumod"
+  "description": "Replacement for cal/ncal written in raku",
+  "license": "Artistic-2.0",
+  "name": "App::Cal",
+  "perl": "6",
+  "provides": {
+    "App::Cal": "lib/App/Cal.rakumod"
   },
-  "resources" : [ ],
-  "source-url" : "git://github.com/coke/raku-cal.git",
-  "tags" : [ ],
-  "test-depends" : [ ],
-  "version" : "0.9.0"
+  "resources": [
+  ],
+  "source-url": "git://github.com/coke/raku-cal.git",
+  "tags": [
+  ],
+  "test-depends": [
+  ],
+  "version": "0.9.0"
 }
