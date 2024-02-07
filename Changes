@@ -1,4 +1,7 @@
 Revision history for App::Cal
 
 {{$NEXT}}
+
+0.9.1  2024-02-07T11:33:14-05:00
+    - add "calendar" tag for raku.land search
     - Adpot mi6
